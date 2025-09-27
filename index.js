@@ -28,8 +28,9 @@ app.post('/api/courses',
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    courses.push({id: courses.length + 1, ...req.body});
-    res.status(201).json(courses);
+    const course = {id: courses.length + 1, ...req.body};
+    courses.push(course);
+    res.status(201).json(course);
 });
 
 const courses = [
