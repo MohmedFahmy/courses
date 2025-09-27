@@ -1,11 +1,10 @@
-const {courses} = require('../data/courses');
-// Get all courses
+let {courses} = require('../data/courses');
+
 const getAllCourses = (req, res) => {
   res.json(courses);
 };
 
 
-// Get a specific course by ID
 const getCourseById = (req, res) => {
     const courseId = +req.params.id;
   const course = courses.find(c => c.id === courseId);

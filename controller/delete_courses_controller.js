@@ -1,6 +1,6 @@
 let {courses} = require('../data/courses');
 
-// Delete a course
+
 const deleteCourse = (req, res) => {
     const courseId = +req.params.courseId;
     courses = courses.filter(c => c.id !== courseId);

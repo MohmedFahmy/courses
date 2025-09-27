@@ -1,6 +1,6 @@
 const {validationResult}= require('express-validator');
-const {courses} = require('../data/courses');
-// Add a new course
+let {courses} = require('../data/courses');
+
 const addNewCourse =  (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
