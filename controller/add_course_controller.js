@@ -1,15 +1,21 @@
 const {validationResult}= require('express-validator');
-let {courses} = require('../data/courses');
+const Course = require('../models/course_model');
+const http_status_text = require('../utils/http_status_text');
+const asyncWrapper = require('../middlewares/async_wrapper');
+const app_errors = require('../utils/app_errors');
 
-const addNewCourse =  (req, res) => {
+const addNewCourse =  asyncWrapper(
+    async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+const error = app_errors.createError(errors.array(), 400, http_status_text.ERROR);
+return next(error);
     }
-    const course = {id: courses.length + 1, ...req.body};
-    courses.push(course);
-    res.status(201).json(course);
+    const newCourse = new Course(req.body);
+    await newCourse.save();
+    res.status(201).json({status: http_status_text.SUCCESS, message: 'Course added successfully', data: {course: newCourse}});
 }
+);
 
 module.exports = {
     addNewCourse
