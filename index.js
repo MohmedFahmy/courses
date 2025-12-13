@@ -1,9 +1,12 @@
 const express = require('express');
-const http_status_text = require('./utils/http_status_text');
-const coursesRoutes = require('./routes/courses_routes');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const http_status_text = require('./utils/http_status_text');
+const coursesRoutes = require('./routes/courses_routes');
+const usersRoutes = require('./routes/user_routes');
+
+
 const app = express();
 const uri =process.env.MONGODB_URL;
 mongoose.connect(uri)
@@ -14,6 +17,7 @@ app.use(express.json());
 app.use(cors()); 
 
 app.use('/api/courses',coursesRoutes);
+app.use('/api/users',usersRoutes);
 
 //Global Route Not Found Handler
 app.use((req, res) => {

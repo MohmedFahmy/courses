@@ -1,6 +1,6 @@
-const Course = require('../models/course_model');
-const http_status_text = require('../utils/http_status_text');
-const asyncWrapper = require('../middlewares/async_wrapper');
+const Course = require('../../models/course_model');
+const http_status_text = require('../../utils/http_status_text');
+const asyncWrapper = require('../../middlewares/async_wrapper');
 
 const deleteCourse = asyncWrapper(
     async (req, res) => {

@@ -1,8 +1,8 @@
 const {validationResult}= require('express-validator');
-const Course = require('../models/course_model');
-const http_status_text = require('../utils/http_status_text');
-const asyncWrapper = require('../middlewares/async_wrapper');
-const app_errors = require('../utils/app_errors');
+const Course = require('../../models/course_model');
+const http_status_text = require('../../utils/http_status_text');
+const asyncWrapper = require('../../middlewares/async_wrapper');
+const app_errors = require('../../utils/app_errors');
 
 const addNewCourse =  asyncWrapper(
     async (req, res, next) => {
