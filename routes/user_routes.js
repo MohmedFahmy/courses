@@ -8,11 +8,12 @@ router.route ('/')
             .get(userControllers.getAllUsers)
 
 // register
+router.route ('/register')
+            .post(userControllers.register)
 
 // login
-
-
-
+router.route ('/login')
+            .post(userControllers.login)
             
 
 
