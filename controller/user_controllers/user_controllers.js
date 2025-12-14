@@ -2,6 +2,7 @@ const asyncWrapper = require('../../middlewares/async_wrapper');
 const User = require('../../models/user_model');
 const http_status_text = require('../../utils/http_status_text');
 const app_errors = require('../../utils/app_errors');
+const bcrypt = require('bcryptjs');
 
 const getAllUsers =asyncWrapper(
   async (req, res) => {
@@ -9,7 +10,7 @@ const getAllUsers =asyncWrapper(
   const limit =query.limit || 10;
   const page =query.page || 1;
   const skip = (page - 1) * limit;
- const users = await User.find({},{"__v": false}).limit(limit).skip(skip);
+ const users = await User.find({},{"__v": false,"password": false}).limit(limit).skip(skip);
     res.json({status: http_status_text.SUCCESS, msg: 'Users retrieved successfully', data: {users: users},});
   
 }
@@ -25,7 +26,12 @@ const register = asyncWrapper(async (req, res, next) => {
         const error = app_errors.createError('User already exists. Please login.', 409, http_status_text.FAILED);
         return next(error);
     }
-    const newUser = new User({ firstName, lastName, email, password });
+    //hash password before saving (omitted for brevity)
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+
+    const newUser = new User({ firstName, lastName, email, password: hashedPassword });
     await newUser.save();
     return res.status(201).json({ status: http_status_text.SUCCESS, message: 'User registered successfully', data: { user: newUser } });
 });
