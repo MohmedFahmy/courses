@@ -3,6 +3,7 @@ const User = require('../../models/user_model');
 const http_status_text = require('../../utils/http_status_text');
 const app_errors = require('../../utils/app_errors');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const getAllUsers =asyncWrapper(
   async (req, res) => {
@@ -32,14 +33,34 @@ const register = asyncWrapper(async (req, res, next) => {
 
 
     const newUser = new User({ firstName, lastName, email, password: hashedPassword });
+    //generate JWT token (omitted for brevity)
+    const token = jwt.sign({ userId: newUser._id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
     await newUser.save();
     return res.status(201).json({ status: http_status_text.SUCCESS, message: 'User registered successfully', data: { user: newUser } });
 });
 
-const login = (req, res) => {};
+const login = asyncWrapper(async (req, res, next) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        const error = app_errors.createError('email and password are required', 400, http_status_text.FAILED);
+        return next(error);
+    }
+    const user = await User.findOne({ email: email });
+    if (!user) {
+        const error = app_errors.createError('Email not found', 401, http_status_text.FAILED);
+        return next(error);
+    }
+    const matchPassword = await bcrypt.compare(password, user.password);
+    if(matchPassword){
+        return res.status(200).json({ status: http_status_text.SUCCESS, message: 'Logged in successful', data: { user: user } });
+    }else{
+        const error = app_errors.createError('Wrong password', 401, http_status_text.FAILED);
+        return next(error);
+    }
+});
 
 module.exports = {
-    getAllUsers,
+    getAllUsers,    
     register,
     login
 };
