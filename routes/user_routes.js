@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const userControllers = require('../controller/user_controllers/user_controllers');
-
+const verifyToken = require('../middlewares/verfiyToken');
 
 // get all users
 router.route ('/')
-            .get(userControllers.getAllUsers)
+            .get(verifyToken,userControllers.getAllUsers)
 
 // register
 router.route ('/register')
