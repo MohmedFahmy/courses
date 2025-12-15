@@ -9,6 +9,8 @@ const {updateCourse} = require('../controller/course_controllers/update_course_c
 const {deleteCourse} = require('../controller/course_controllers/delete_courses_controller');   
 const {validateCourse}= require('../middlewares/validation_schema');
 const verifyToken = require('../middlewares/verfiyToken');
+const userRoles = require('../utils/roles');
+const allowTo = require('../middlewares/allowedTo');
 
 
 
@@ -16,6 +18,7 @@ router.route ('/')
             .get(getAllCourses)
             .post(
                 verifyToken,
+                allowTo( userRoles.INSTRUCTOR),
                 validateCourse,
                 addNewCourse
                 );
@@ -24,7 +27,7 @@ router.route ('/')
 router.route('/:id') 
             .get(getCourseById)
             .patch(updateCourse)
-            .delete(deleteCourse)
+            .delete(verifyToken, allowTo(userRoles.ADMIN, userRoles.INSTRUCTOR), deleteCourse)
 
 
 

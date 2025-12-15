@@ -35,7 +35,7 @@ const register = asyncWrapper(async (req, res, next) => {
 
     const newUser = new User({ firstName, lastName, email, password: hashedPassword , role });
     //generate JWT token (omitted for brevity)
-    const token = await generateJWT({ userId: newUser._id, email: newUser.email });
+    const token = await generateJWT({ userId: newUser._id, email: newUser.email , role: newUser.role });
     newUser.token = token;
     await newUser.save();
     return res.status(201).json({ status: http_status_text.SUCCESS, message: 'User registered successfully', data: { user: newUser } });
@@ -54,7 +54,7 @@ const login = asyncWrapper(async (req, res, next) => {
     }
     const matchPassword = await bcrypt.compare(password, user.password);
     if(matchPassword){
-        const token = await generateJWT({ userId: user._id, email: user.email });
+        const token = await generateJWT({ userId: user._id, email: user.email , role: user.role });
         return res.status(200).json({ status: http_status_text.SUCCESS, message: 'Logged in successful', data: { token: token } });
     }else{
         const error = app_errors.createError('Wrong password', 401, http_status_text.FAILED);
