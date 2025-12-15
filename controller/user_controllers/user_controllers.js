@@ -21,7 +21,7 @@ const getAllUsers =asyncWrapper(
 
 
 const register = asyncWrapper(async (req, res, next) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, role } = req.body;
     const oldUser = await User.findOne({ email: email });
     if (oldUser) {
         // return res.status(409).json({ status: http_status_text.FAILED, message: 'User already exists. Please login.' });
@@ -33,7 +33,7 @@ const register = asyncWrapper(async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
 
-    const newUser = new User({ firstName, lastName, email, password: hashedPassword });
+    const newUser = new User({ firstName, lastName, email, password: hashedPassword , role });
     //generate JWT token (omitted for brevity)
     const token = await generateJWT({ userId: newUser._id, email: newUser.email });
     newUser.token = token;
