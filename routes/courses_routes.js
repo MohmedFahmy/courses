@@ -18,7 +18,7 @@ router.route ('/')
             .get(getAllCourses)
             .post(
                 verifyToken,
-                allowTo( userRoles.INSTRUCTOR),
+                allowTo(userRoles.INSTRUCTOR),
                 validateCourse,
                 addNewCourse
                 );

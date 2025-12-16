@@ -5,6 +5,7 @@ require('dotenv').config();
 const http_status_text = require('./utils/http_status_text');
 const coursesRoutes = require('./routes/courses_routes');
 const usersRoutes = require('./routes/user_routes');
+const path = require('path');
 
 
 const app = express();
@@ -18,6 +19,10 @@ app.use(cors());
 
 app.use('/api/courses',coursesRoutes);
 app.use('/api/users',usersRoutes);
+
+
+// Serve static files from the "uploads" directory as profile images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //Global Route Not Found Handler
 app.use((req, res) => {
