@@ -33,7 +33,7 @@ const register = asyncWrapper(async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
 
-    const newUser = new User({ firstName, lastName, email, password: hashedPassword , role });
+    const newUser = new User({ firstName, lastName, email, password: hashedPassword , role, avatar: req.file.filename });
     //generate JWT token (omitted for brevity)
     const token = await generateJWT({ userId: newUser._id, email: newUser.email , role: newUser.role });
     newUser.token = token;
